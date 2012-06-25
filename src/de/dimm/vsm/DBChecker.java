@@ -25,7 +25,7 @@ import java.sql.Statement;
 public class DBChecker
 {
 
-    static long actDBRelease = 6;
+    static long actDBRelease = 8;
     
     public static long getActDBRelease()
     {
@@ -146,6 +146,7 @@ public class DBChecker
         check_db_changes(stm, "select count(mmIP) from HotFolder where idx=0", true, "alter table HotFolder add mmIP varchar(255)", "update HotFolder set mmIP='' where mmIP is null");
         check_db_changes(stm, "select count(mmMountPath) from HotFolder where idx=0", true, "alter table HotFolder add mmMountPath varchar(255)", "update HotFolder set mmMountPath='' where mmMountPath is null");
 
+        check_db_changes(stm, "select count(optionStr) from RoleOption where idx=0", true, "alter table RoleOption add optionStr varchar(255)", "update RoleOption set optionStr='' where optionStr is null");
 
 
 

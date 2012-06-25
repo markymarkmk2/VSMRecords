@@ -19,6 +19,9 @@ public class RoleOption implements java.io.Serializable
     public static final String RL_ALLOW_VIEW_PARAM = "viewp";
     public static final String RL_ALLOW_EDIT_PARAM = "editp";
     public static final String RL_ADMIN = "admin";
+    public static final String RL_USERPATH = "upath_opt";  // ROLEOPTION HAS OPTION FIELD
+
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -28,6 +31,7 @@ public class RoleOption implements java.io.Serializable
     private Role role;
     private String token;
     private long flags;
+    private String optionStr;
 
     public RoleOption()
     {
@@ -39,18 +43,28 @@ public class RoleOption implements java.io.Serializable
         return token;
     }
 
+    public boolean hasOptionField()
+    {
+        return token.contains("_opt");
+    }
+    public boolean hasFlagsField()
+    {
+        return token.contains("_flags");
+    }
+
 
     public RoleOption( int id )
     {
         this.idx = id;
     }
 
-    public RoleOption( int id, Role r, String token, int flags )
+    public RoleOption( int id, Role r, String token, int flags, String option )
     {
         this.idx = id;
         this.role = r;
         this.token = token;
         this.flags = flags;
+        this.optionStr = option;
     }
 
     public long getIdx()
@@ -92,4 +106,92 @@ public class RoleOption implements java.io.Serializable
     {
         this.flags = flags;
     }
+
+    public String getOptionStr()
+    {
+        return optionStr;
+    }
+
+    public void setOptionStr( String option )
+    {
+        this.optionStr = option;
+    }
+
+    public boolean isValidUserPath()
+    {
+        if (optionStr == null)
+            return false;
+        
+        int ipidx = optionStr.indexOf(':');
+        int portidx = optionStr.indexOf('/');
+
+        if (optionStr.isEmpty())
+            return false;
+        if (ipidx <= 0 || portidx <= 0 || portidx < ipidx)
+            return false;
+
+        try
+        {
+
+            String server = optionStr.substring(0, ipidx);
+            if (server.isEmpty())
+                return false;
+
+            String port = optionStr.substring(ipidx + 1, portidx);
+
+
+            long portNo = Integer.parseInt(port);
+        }
+        catch (NumberFormatException numberFormatException)
+        {
+            return false;
+        }
+        return true;
+    }
+    public String getUserPathServer()
+    {
+        try
+        {
+            int ipidx = optionStr.indexOf(':');
+            String server = optionStr.substring(0, ipidx);
+            return server;
+        }
+        catch (Exception exc)
+        {
+        }
+        return null;
+    }
+    public int getUserPathPort()
+    {
+        try
+        {
+            int ipidx = optionStr.indexOf(':');
+            int portidx = optionStr.indexOf('/');
+            String port = optionStr.substring(ipidx + 1, portidx);
+            int portNo = Integer.parseInt(port);
+            return portNo;
+        }
+        catch (Exception exc)
+        {
+        }
+        return -1;
+    }
+
+    public String getUserPathPath() // ?!?
+    {
+        try
+        {
+            int portidx = optionStr.indexOf('/');
+            String path = optionStr.substring(portidx + 1);
+
+            return path;
+        }
+        catch (Exception exc)
+        {
+        }
+        return "";
+    }
+
+
+    
 }

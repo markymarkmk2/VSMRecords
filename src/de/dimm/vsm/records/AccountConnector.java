@@ -19,6 +19,7 @@ public class AccountConnector  implements java.io.Serializable {
      static final long serialVersionUID = 1L;
      public static long FL_DISABLED = 0x01;
      public static long FL_SSL = 0x02;
+     public static long FL_ALLOW_EMPTY_PWD = 0x04;
 
      public static String TY_LDAP = "ldap";
      public static String TY_AD = "ad";
@@ -181,7 +182,17 @@ public class AccountConnector  implements java.io.Serializable {
     {
         this.flags = flags;
     }
-    
+
+    public boolean isAllowEmptyPwd()
+    {
+        return ((this.flags & FL_ALLOW_EMPTY_PWD) == FL_ALLOW_EMPTY_PWD);
+    }
+    public boolean isSSL()
+    {
+        return ((this.flags & FL_SSL) == FL_SSL);
+    }
+
+
 
     /**
      * @return the searchbase
