@@ -22,12 +22,14 @@ public class RemoteFSElem implements Serializable
     public static final char STREAMINFO_NONE = 0;
     public static final char STREAMINFO_NTFS = 'n';
     public static final char STREAMINFO_APPLEDOUBLE = 'a';
+    public static final char STREAMINFO_ETHERSHARE = 'e';
 
     public static final char ACLINFO_NONE = 0;
     public static final char ACLINFO_OSX = 'a';
     public static final char ACLINFO_POSIX = 'p';
     public static final char ACLINFO_NFSv4 = 'n';
     public static final char ACLINFO_WIN = 'w';
+    public static final char ACLINFO_ES = 'e';
     public static final String LAZY_ACLINFO = "LAZYACL";
 
 
