@@ -25,7 +25,7 @@ import java.sql.Statement;
 public class DBChecker
 {
 
-    static long actDBRelease = 8;
+    static long actDBRelease = 17;
     
     public static long getActDBRelease()
     {
@@ -71,6 +71,9 @@ public class DBChecker
         check_db_changes(stm, "select count(landingZone) from StoragePool where idx=0", true, "alter table StoragePool add landingZone smallInt", "update StoragePool set landingZone=1 where landingZone is null");
         check_db_changes(stm, "select count(mode) from Retention where idx=0", true, "alter table Retention add mode varchar(40)", "update Retention set mode='ba' where mode is null");
         check_db_changes(stm, "select count(onlyNewer) from Clientinfo where idx=0", true, "alter table Clientinfo add onlyNewer smallInt", "update Clientinfo set onlyNewer=0 where onlyNewer is null");
+        check_db_changes(stm, "select count(encryption) from Clientinfo where idx=0", true, "alter table Clientinfo add encryption smallInt", "update Clientinfo set encryption=0 where encryption is null");
+
+
         check_db_changes(stm, "select count(aclinfo) from FILESYSTEMELEMATTRIBUTES where idx=0", true, "alter table FILESYSTEMELEMATTRIBUTES add aclinfo int", "update FILESYSTEMELEMATTRIBUTES set aclinfo=0 where aclinfo is null");
         check_db_changes(stm, "select count(streamInfo) from XANODE where idx=0", true, "alter table XANODE add streamInfo int", "update XANODE set streamInfo=0 where streamInfo is null");
 
@@ -88,6 +91,7 @@ public class DBChecker
 
         check_db_changes(stm, "select count(ignorecase) from EXCLUDES where idx=0", true, "alter table EXCLUDES add ignorecase smallInt", "update EXCLUDES set ignorecase=0 where ignorecase is null");
 
+        check_db_changes(stm, "select count(cloneNode_idx) from AbstractStorageNode where idx=0", true, "alter table AbstractStorageNode add cloneNode_idx bigInt", null);
        
 
         try
@@ -145,8 +149,12 @@ public class DBChecker
         check_db_changes(stm, "select count(mmMediaType) from HotFolder where idx=0", true, "alter table HotFolder add mmMediaType varchar(255)", "update HotFolder set mmMediaType='' where mmMediaType is null");
         check_db_changes(stm, "select count(mmIP) from HotFolder where idx=0", true, "alter table HotFolder add mmIP varchar(255)", "update HotFolder set mmIP='' where mmIP is null");
         check_db_changes(stm, "select count(mmMountPath) from HotFolder where idx=0", true, "alter table HotFolder add mmMountPath varchar(255)", "update HotFolder set mmMountPath='' where mmMountPath is null");
+        check_db_changes(stm, "select count(hfcompression) from HotFolder where idx=0", true, "alter table HotFolder add hfcompression smallInt", "update HotFolder set hfcompression=0 where hfcompression is null");
+        check_db_changes(stm, "select count(hfencryption) from HotFolder where idx=0", true, "alter table HotFolder add hfencryption smallInt", "update HotFolder set hfencryption=0 where hfencryption is null");
 
         check_db_changes(stm, "select count(optionStr) from RoleOption where idx=0", true, "alter table RoleOption add optionStr varchar(255)", "update RoleOption set optionStr='' where optionStr is null");
+        check_db_changes(stm, "select count(disabled) from MailNotifications where idx=0", true, "alter table MailNotifications add disabled smallInt", "update MailNotifications set disabled=0 where disabled is null");
+        check_db_changes(stm, "select count(smtpdata_idx) from MailGroup where idx=0", true, "alter table MailGroup add smtpdata_idx bigInt", null);
 
 
 
