@@ -38,6 +38,8 @@ public class ClientInfo  implements Serializable
     private boolean disabled;
     private boolean compression;
     private boolean onlyNewer;
+    private boolean encryption;
+
     
     @OneToMany(mappedBy = "clinfo", fetch=FetchType.EAGER, orphanRemoval=true, cascade = {CascadeType.REMOVE,CascadeType.DETACH})
     private List<Excludes> exclList;
@@ -144,6 +146,17 @@ public class ClientInfo  implements Serializable
         return compression;
     }
 
+    public boolean isCompression()
+    {
+        return compression;
+    }
+
+    public boolean isDisabled()
+    {
+        return disabled;
+    }
+
+
     /**
      * @param compression the compression to set
      */
@@ -193,6 +206,18 @@ public class ClientInfo  implements Serializable
     {
         return onlyNewer;
     }
+
+    public boolean isEncryption()
+    {
+        return encryption;
+    }
+
+    public void setEncryption( boolean encryption )
+    {
+        this.encryption = encryption;
+    }
+
+
 
 
 }

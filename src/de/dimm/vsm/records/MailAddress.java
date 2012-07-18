@@ -10,6 +10,8 @@ package de.dimm.vsm.records;
 public class MailAddress  implements java.io.Serializable {
 
 
+    public static final int DISABLED = 0x01;
+
      private int id;
      
      private String email;

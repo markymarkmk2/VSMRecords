@@ -35,6 +35,8 @@ public class HotFolder implements Serializable
 
     public static final String HOTFOLDERBASE = "Hotfolder";  // USED IN FILESYSTEM AS BASE
 
+   
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -65,6 +67,9 @@ public class HotFolder implements Serializable
 
     String mmIP;
     String mmMountPath;
+
+    private boolean hfencryption;
+    private boolean hfcompression;
 
 
     @OneToMany(mappedBy = "hotfolder", orphanRemoval=true, cascade = {CascadeType.REMOVE,CascadeType.DETACH})
@@ -311,7 +316,28 @@ public class HotFolder implements Serializable
         this.mmIP = mmIP;
     }
 
-    
+    public boolean isHfcompression()
+    {
+        return hfcompression;
+    }
+
+    public boolean isHfencryption()
+    {
+        return hfencryption;
+    }
+
+    public void setHfencryption( boolean hfencryption )
+    {
+        this.hfencryption = hfencryption;
+    }
+
+    public void setHfcompression( boolean hfcompression )
+    {
+        this.hfcompression = hfcompression;
+    }
+
+
+
 
     
 }
