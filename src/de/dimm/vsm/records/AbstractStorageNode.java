@@ -13,6 +13,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 
 
@@ -61,6 +62,9 @@ public class AbstractStorageNode implements Serializable
     @ManyToOne
     private StoragePool pool;
 
+
+    @OneToOne
+    private AbstractStorageNode cloneNode;
 
     /**
      * @return the name
@@ -219,7 +223,18 @@ public class AbstractStorageNode implements Serializable
         this.pool = storagePool;
     }
 
-  
+    public AbstractStorageNode getCloneNode()
+    {
+        return cloneNode;
+    }
+
+    public void setCloneNode( AbstractStorageNode cloneNode )
+    {
+        this.cloneNode = cloneNode;
+    }
+
+
+    
 
 }
 
