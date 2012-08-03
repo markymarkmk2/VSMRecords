@@ -274,7 +274,11 @@ public class FileSystemElemNode implements Serializable
 
     public LazyList<FileSystemElemNode> getChildren()
     {
-        return (LazyList<FileSystemElemNode>)children;
+        if (children instanceof LazyList)
+            return (LazyList<FileSystemElemNode>)children;
+
+
+        return null;
     }
     public List<FileSystemElemNode> getChildren(GenericEntityManager em)
     {
