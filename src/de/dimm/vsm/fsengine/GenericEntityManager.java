@@ -28,6 +28,9 @@ public interface GenericEntityManager
     <T> List<T> createQuery( String string, Class<T> aClass ) throws SQLException;
     <T> List<T> createQuery( String string, Class<T> aClass, int maxResults ) throws SQLException;
     <T> List<T> createQuery( String string, Class<T> aClass, int maxResults, boolean distinct ) throws SQLException;
+    <T> List<T> createQuery( String string, Class<T> aClass, int maxResults, int maxSeconds ) throws SQLException;
+    <T> List<T> createQuery( String string, Class<T> aClass, int maxResults, boolean distinct, int maxSeconds ) throws SQLException;
+
     public Long getIdx( Object o );
 
     <T> T createSingleResultQuery( String string, Class<T> aClass ) throws SQLException;
@@ -49,6 +52,7 @@ public interface GenericEntityManager
     void rollback_transaction();
 
     public List<Object[]> createNativeQuery( String string, int qryCount ) throws SQLException;
+    public List<Object[]> createNativeQuery( String string, int maxResults, int maxSeconds ) throws SQLException;
 
     public boolean nativeCall( String string );
 
