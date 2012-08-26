@@ -5,6 +5,7 @@
 
 package de.dimm.vsm.records;
 
+import de.dimm.vsm.net.RemoteFSElem;
 import java.io.Serializable;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -54,6 +55,18 @@ public class Excludes implements Serializable
         this.includeMatches = includeMatches;
         this.ignorecase = ignorecase;
         this.mode = mode;
+    }
+
+    public void clone( Excludes exc )
+    {
+        this.argument = exc.argument;
+        this.isDir = exc.isDir;
+        this.isFullPath = exc.isFullPath;
+        this.includeMatches = exc.includeMatches;
+        this.ignorecase = exc.ignorecase;
+        this.mode = exc.mode;
+        this.clinfo = exc.clinfo;
+        this.idx = exc.idx;
     }
 
 
@@ -177,5 +190,58 @@ public class Excludes implements Serializable
         this.ignorecase = ignorecase;
     }
 
+    private static boolean _checkExclude( Excludes excludes, RemoteFSElem remoteFSElem )
+    {
+        if (excludes.getIsDir() != remoteFSElem.isDirectory())
+            return false;
+
+        String file = remoteFSElem.getPath();
+
+        if (!excludes.getIsFullPath())
+            file = remoteFSElem.getName();
+
+        String arg = excludes.getArgument();
+        if (excludes.isIgnorecase())
+        {
+            file = file.toLowerCase();
+            arg = arg.toLowerCase();
+        }
+
+
+        if(excludes.getMode().equals(Excludes.MD_BEGINS_WITH))
+        {
+            if (file.startsWith(arg))
+                return true;
+        }
+        else if(excludes.getMode().equals(Excludes.MD_CONTAINS))
+        {
+            if (file.indexOf(arg) >= 0)
+                return true;
+        }
+        else if (excludes.getMode().equals(Excludes.MD_ENDS_WITH))
+        {
+            if (file.endsWith(arg))
+                return true;
+        }
+        else if (excludes.getMode().equals(Excludes.MD_EXACTLY))
+        {
+            if (file.equals(arg))
+                return true;
+        }
+        else if (excludes.getMode().equals(Excludes.MD_REGEXP))
+        {
+            if (file.matches(arg))
+                return true;
+        }
+
+        return false;
+
+
+    }
+    public static boolean checkExclude( Excludes excludes, RemoteFSElem remoteFSElem )
+    {
+        boolean ret = _checkExclude(excludes, remoteFSElem);
+        return excludes.getIncludeMatches() ? !ret : ret;
+    }
     
 }
