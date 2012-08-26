@@ -19,6 +19,7 @@ import org.eclipse.persistence.indirection.ValueHolderInterface;
 public abstract class LazyList<T> implements List<T>, IndirectContainer
 {    
     protected List<T> realList;
+    protected final String mtx = "";
 
     public LazyList()
     {
@@ -55,23 +56,32 @@ public abstract class LazyList<T> implements List<T>, IndirectContainer
 
     public boolean isRealized()
     {
-        return realList != null;
+        synchronized(mtx)
+        {
+            return realList != null;
+        }
     }
 
     public void unRealize()
     {
-        if (realList != null)
+        synchronized(mtx)
         {
-            realList.clear();
-            realList = null;
+            if (realList != null)
+            {
+                realList.clear();
+                realList = null;
+            }
         }
     }
 
     @Override
     public String toString()
     {
-        if (isRealized())
-            return realList.toString();
+        synchronized(mtx)
+        {
+            if (isRealized())
+                return realList.toString();
+        }
 
         return "unrealized";
     }
@@ -80,15 +90,21 @@ public abstract class LazyList<T> implements List<T>, IndirectContainer
 //    @Override
     public boolean isEmpty(GenericEntityManager handler)
     {
-        realize(handler);
-        return realList.isEmpty();
+        synchronized(mtx)
+        {
+            realize(handler);
+            return realList.isEmpty();
+        }
     }
 
  //   @Override
     public int size(GenericEntityManager handler)
     {
-        realize(handler);
-        return realList.size();
+        synchronized(mtx)
+        {
+            realize(handler);
+            return realList.size();
+        }
     }
 
 
@@ -97,450 +113,594 @@ public abstract class LazyList<T> implements List<T>, IndirectContainer
     public boolean contains( GenericEntityManager handler, Object o )
     {
         long idx = handler.getIdx(o);
-        realize(handler);
-        for (int i = 0; i < realList.size(); i++)
+        synchronized(mtx)
         {
-            Object object = realList.get(i);
-            long _idx = handler.getIdx(object);
-            if (_idx == idx)
+            realize(handler);
+            for (int i = 0; i < realList.size(); i++)
             {
-                return true;
+                Object object = realList.get(i);
+                long _idx = handler.getIdx(object);
+                if (_idx == idx)
+                {
+                    return true;
+                }
             }
+            return false;
         }
-        return false;
     }
 
 //    @Override
     public Iterator iterator(GenericEntityManager handler)
     {
-        realize( handler );
-        return realList.iterator();
+        synchronized(mtx)
+        {
+            realize( handler );
+            return realList.iterator();
+        }
     }
 
 //    @Override
     public Object[] toArray(GenericEntityManager handler)
     {
-        realize( handler );
-        return realList.toArray();
+        synchronized(mtx)
+        {
+            realize( handler );
+            return realList.toArray();
+        }
     }
 
  //   @Override
     public Object[] toArray( GenericEntityManager handler, Object[] a )
     {
-        realize( handler );
-        return realList.toArray(a);
+        synchronized(mtx)
+        {
+            realize( handler );
+            return realList.toArray(a);
+        }
     }
 
 //    @Override
     public boolean add( GenericEntityManager handler, T e )
     {
-        realize( handler );
-        return realList.add(e);
+        synchronized(mtx)
+        {
+            realize( handler );
+            return realList.add(e);
+        }
     }
 
 //    @Override
     public boolean remove( GenericEntityManager handler, T o )
     {
         long idx = handler.getIdx(o);
-        realize( handler );
-        for (int i = 0; i < realList.size(); i++)
+        synchronized(mtx)
         {
-            T object = realList.get(i);
-            long _idx = handler.getIdx(object);
-            if (_idx == idx)
+            realize( handler );
+            for (int i = 0; i < realList.size(); i++)
             {
-                realList.remove(object);
-                return true;
+                T object = realList.get(i);
+                long _idx = handler.getIdx(object);
+                if (_idx == idx)
+                {
+                    realList.remove(object);
+                    return true;
+                }
             }
+            return false;
         }
-        return false;
     }
 
 //    @Override
     public boolean containsAll( GenericEntityManager handler, Collection c )
     {
-        realize( handler );
-        return realList.containsAll(c);
+        synchronized(mtx)
+        {
+            realize( handler );
+            return realList.containsAll(c);
+        }
     }
 
 //    @Override
     public boolean addAll( GenericEntityManager handler, Collection c )
     {
-        realize( handler );
-        return realList.addAll(c);
+        synchronized(mtx)
+        {
+            realize( handler );
+            return realList.addAll(c);
+        }
     }
 
 //    @Override
     public boolean addAll( GenericEntityManager handler, int index, Collection c )
     {
-        realize( handler );
-        return realList.addAll(index, c);
+        synchronized(mtx)
+        {
+            realize( handler );
+            return realList.addAll(index, c);
+        }
     }
 
 //    @Override
     public boolean removeAll( GenericEntityManager handler, Collection c )
     {
-        realize( handler );
-        return realList.removeAll(c);
+        synchronized(mtx)
+        {
+            realize( handler );
+            return realList.removeAll(c);
+        }
     }
 
  //   @Override
     public boolean retainAll( GenericEntityManager handler, Collection c )
     {
-        realize( handler );
-        return realList.retainAll(c);
+        synchronized(mtx)
+        {
+            realize( handler );
+            return realList.retainAll(c);
+        }
     }
 
 //    @Override
     public void clear(GenericEntityManager handler)
     {
-        realize( handler );
-        realList.clear();
+        synchronized(mtx)
+        {
+            if (!isRealized())
+                return;
+
+            realize( handler );
+            realList.clear();
+        }
     }
 
  //   @Override
     public T get( GenericEntityManager handler, int index )
     {
-        realize( handler );
-        return realList.get(index);
+        synchronized(mtx)
+        {
+            realize( handler );
+            return realList.get(index);
+        }
     }
 
 //    @Override
     public Object set( GenericEntityManager handler, int index, T element )
     {
-        realize( handler );
-        return realList.set(index, element);
+        synchronized(mtx)
+        {
+            realize( handler );
+            return realList.set(index, element);
+        }
     }
 
 //    @Override
     public void add( GenericEntityManager handler, int index, T element )
     {
-        realize( handler );
-        realList.add(index, element);
+        synchronized(mtx)
+        {
+            realize( handler );
+            realList.add(index, element);
+        }
     }
 
 //    @Override
     public Object remove( GenericEntityManager handler, int index )
     {
-        realize( handler );
-        return realList.remove(index);
+        synchronized(mtx)
+        {
+            realize( handler );
+            return realList.remove(index);
+        }
     }
 
  //   @Override
     public int indexOf( GenericEntityManager handler, Object o )
     {
         long idx = handler.getIdx(o);
-        realize( handler );
-        for (int i = 0; i < realList.size(); i++)
+        synchronized(mtx)
         {
-            Object object = realList.get(i);
-            long _idx = handler.getIdx(object);
-            if (_idx == idx)
+            realize( handler );
+            for (int i = 0; i < realList.size(); i++)
             {
+                Object object = realList.get(i);
+                long _idx = handler.getIdx(object);
+                if (_idx == idx)
+                {
 
-                return i;
+                    return i;
+                }
             }
+            return -1;
         }
-        return -1;
     }
 
 //    @Override
     public int lastIndexOf( GenericEntityManager handler, Object o )
     {
         long idx = handler.getIdx(o);
-        realize( handler );
-        for (int i = realList.size() - 1; i >= 0; i--)
+        synchronized(mtx)
         {
-            Object object = realList.get(i);
-            long _idx = handler.getIdx(object);
-            if (_idx == idx)
+            realize( handler );
+            for (int i = realList.size() - 1; i >= 0; i--)
             {
+                Object object = realList.get(i);
+                long _idx = handler.getIdx(object);
+                if (_idx == idx)
+                {
 
-                return i;
+                    return i;
+                }
             }
+            return -1;
         }
-        return -1;
     }
 
 //    @Override
     public ListIterator listIterator(GenericEntityManager handler)
     {
-        realize( handler );
-        return realList.listIterator();
+        synchronized(mtx)
+        {
+            realize( handler );
+            return realList.listIterator();
+        }
     }
 
 //    @Override
     public ListIterator listIterator( GenericEntityManager handler, int index )
     {
-        realize( handler );
-        return realList.listIterator(index);
+        synchronized(mtx)
+        {
+            realize( handler );
+            return realList.listIterator(index);
+        }
     }
 
 //    @Override
     public List subList( GenericEntityManager handler, int fromIndex, int toIndex )
     {
-        realize( handler );
-        return realList.subList(fromIndex, toIndex);
+        synchronized(mtx)
+        {
+            realize( handler );
+            return realList.subList(fromIndex, toIndex);
+        }
     }
 
    
     public List<T> getList( GenericEntityManager handler )
     {
-        realize( handler );
-        return realList;
+        synchronized(mtx)
+        {
+            realize( handler );
+            return realList;
+        }
     }
     public List<T> getList()
     {
-        if (!isRealized())
+        synchronized(mtx)
+        {
+                    if (!isRealized())
             throw new RuntimeException( "Unrealized list in getList " + this.toString() );
         
-        return realList;
+            return realList;
+        }
     }
 
     public boolean addIfRealized( T ajfl )
     {
-        if (isRealized())
+        synchronized(mtx)
         {
-            return realList.add(ajfl);
+            if (isRealized())
+            {
+                return realList.add(ajfl);
+            }
+            return false;
         }
-        return false;
     }
 
     public boolean removeIfRealized( T ajfl )
     {
-        if (isRealized())
+        synchronized(mtx)
         {
-            return realList.remove(ajfl);
+            if (isRealized())
+            {
+                return realList.remove(ajfl);
+            }
+            // WE ASSUME OBJECT WOULD BE IN LIST IT WERE REALIZED
+            return true;
         }
-        // WE ASSUME OBJECT WOULD BE IN LIST IT WERE REALIZED
-        return true;
     }
 
     @Override
     public boolean add( T e )
     {
-        if (isRealized())
+        synchronized(mtx)
         {
-            return realList.add(e);
-        }
+            if (isRealized())
+            {
+                return realList.add(e);
+            }
 
-        throw new UnsupportedOperationException("Invalid Function Call for LazyList");
+            throw new UnsupportedOperationException("Invalid Function Call for LazyList");
+        }
     }
 
     @Override
     public void clear()
     {
-        unRealize();
+        synchronized(mtx)
+        {
+            unRealize();
+        }
     }
 
     @Override
     public boolean contains( Object o )
     {
-        if (isRealized())
+        synchronized(mtx)
         {
-            return realList.contains((T)o);
+                if (isRealized())
+            {
+                return realList.contains((T)o);
+            }
+            throw new UnsupportedOperationException("Invalid Function Call 1 for LazyList");
         }
-        throw new UnsupportedOperationException("Invalid Function Call 1 for LazyList");
     }
 
     @Override
     public boolean containsAll( Collection<?> c )
     {
-        if (isRealized())
+        synchronized(mtx)
         {
-            return realList.containsAll(c);
+            if (isRealized())
+            {
+                return realList.containsAll(c);
+            }
+            throw new UnsupportedOperationException("Invalid Function Call 2 for LazyList");
         }
-        throw new UnsupportedOperationException("Invalid Function Call 2 for LazyList");
     }
 
     @Override
     public boolean isEmpty()
     {
-        if (isRealized())
+        synchronized(mtx)
         {
-            return realList.isEmpty();
+            if (isRealized())
+            {
+                return realList.isEmpty();
+            }
+            throw new UnsupportedOperationException("Invalid Function Call 3 for LazyList");
         }
-        throw new UnsupportedOperationException("Invalid Function Call 3 for LazyList");
     }
 
     @Override
     public Iterator<T> iterator()
     {
-        if (isRealized())
+        synchronized(mtx)
         {
-            return realList.iterator();
+            if (isRealized())
+            {
+                return realList.iterator();
+            }
+            throw new UnsupportedOperationException("Invalid Function Call 4 for LazyList");
         }
-        throw new UnsupportedOperationException("Invalid Function Call 4 for LazyList");
     }
 
     @Override
     public boolean remove( Object o )
     {
-        if (isRealized())
+        synchronized(mtx)
         {
-            return realList.remove((T)o);
+            if (isRealized())
+            {
+                return realList.remove((T)o);
+            }
+            throw new UnsupportedOperationException("Invalid Function Call 5 for LazyList");
         }
-        throw new UnsupportedOperationException("Invalid Function Call 5 for LazyList");
     }
 
     @Override
     public boolean removeAll( Collection<?> c )
     {
-        if (isRealized())
+        synchronized(mtx)
         {
-            return realList.removeAll(c);
+            if (isRealized())
+            {
+                return realList.removeAll(c);
+            }
+            throw new UnsupportedOperationException("Invalid Function Call 6 for LazyList");
         }
-        throw new UnsupportedOperationException("Invalid Function Call 6 for LazyList");
     }
 
     @Override
     public boolean retainAll( Collection<?> c )
     {
-        if (isRealized())
+        synchronized(mtx)
         {
-            return realList.retainAll(c);
+            if (isRealized())
+            {
+                return realList.retainAll(c);
+            }
+            throw new UnsupportedOperationException("Invalid Function Call 7 for LazyList");
         }
-        throw new UnsupportedOperationException("Invalid Function Call 7 for LazyList");
     }
 
     @Override
     public int size()
     {
-        if (isRealized())
-            return realList.size();
+        synchronized(mtx)
+        {
+            if (isRealized())
+                return realList.size();
+        }
         return 0;
     }
 
     @Override
     public Object[] toArray()
     {
-        if (isRealized())
+        synchronized(mtx)
         {
-            return realList.toArray();
+            if (isRealized())
+            {
+                return realList.toArray();
+            }
+            throw new UnsupportedOperationException("Invalid Function Call 8 for LazyList");
         }
-        throw new UnsupportedOperationException("Invalid Function Call 8 for LazyList");
     }
 
     @Override
     public <T> T[] toArray( T[] a )
     {
-        if (isRealized())
+        synchronized(mtx)
         {
-            return realList.toArray(a);
+            if (isRealized())
+            {
+                return realList.toArray(a);
+            }
+            throw new UnsupportedOperationException("Invalid Function Call 9 for LazyList");
         }
-        throw new UnsupportedOperationException("Invalid Function Call 9 for LazyList");
     }
 
     @Override
     public boolean addAll( Collection<? extends T> c )
     {
-        if (isRealized())
+        synchronized(mtx)
         {
-            return realList.addAll(c);
+            if (isRealized())
+            {
+                return realList.addAll(c);
+            }
+            throw new UnsupportedOperationException("Invalid Function Call 10 for LazyList");
         }
-        throw new UnsupportedOperationException("Invalid Function Call 10 for LazyList");
     }
 
     @Override
     public void add( int index, T element )
     {
-        if (isRealized())
+        synchronized(mtx)
         {
-            realList.add(index, element);
+            if (isRealized())
+            {
+                realList.add(index, element);
+            }
+            throw new UnsupportedOperationException("Invalid Function Call 11 for LazyList");
         }
-        throw new UnsupportedOperationException("Invalid Function Call 11 for LazyList");
     }
 
     @Override
     public boolean addAll( int index, Collection<? extends T> c )
     {
-        if (isRealized())
+        synchronized(mtx)
         {
-            return realList.addAll(index, c);
+            if (isRealized())
+            {
+                return realList.addAll(index, c);
+            }
+            throw new UnsupportedOperationException("Invalid Function Call 12 for LazyList");
         }
-        throw new UnsupportedOperationException("Invalid Function Call 12 for LazyList");
     }
 
     @Override
     public T get( int index )
     {
-        if (isRealized())
+        synchronized(mtx)
         {
-            return realList.get(index);
+            if (isRealized())
+            {
+                return realList.get(index);
+            }
+            throw new UnsupportedOperationException("Invalid Function Call 13 for LazyList");
         }
-        throw new UnsupportedOperationException("Invalid Function Call 13 for LazyList");
     }
 
     @Override
     public int indexOf( Object o )
     {
-        if (isRealized())
+        synchronized(mtx)
         {
-            return realList.indexOf(o);
+            if (isRealized())
+            {
+                return realList.indexOf(o);
+            }
+            throw new UnsupportedOperationException("Invalid Function Call 14 for LazyList");
         }
-        throw new UnsupportedOperationException("Invalid Function Call 14 for LazyList");
     }
 
     @Override
     public int lastIndexOf( Object o )
     {
-        if (isRealized())
+        synchronized(mtx)
         {
-            return realList.lastIndexOf(o);
+            if (isRealized())
+            {
+                return realList.lastIndexOf(o);
+            }
+            throw new UnsupportedOperationException("Invalid Function Call 15 for LazyList");
         }
-        throw new UnsupportedOperationException("Invalid Function Call 15 for LazyList");
     }
 
     @Override
     public ListIterator<T> listIterator()
     {
-        if (isRealized())
+        synchronized(mtx)
         {
-            return realList.listIterator();
+            if (isRealized())
+            {
+                return realList.listIterator();
+            }
+            throw new UnsupportedOperationException("Invalid Function Call 16 for LazyList");
         }
-        throw new UnsupportedOperationException("Invalid Function Call 16 for LazyList");
     }
 
     @Override
     public ListIterator<T> listIterator( int index )
     {
-        if (isRealized())
+        synchronized(mtx)
         {
-            return realList.listIterator(index);
+            if (isRealized())
+            {
+                return realList.listIterator(index);
+            }
+            throw new UnsupportedOperationException("Invalid Function Call 17 for LazyList");
         }
-        throw new UnsupportedOperationException("Invalid Function Call 17 for LazyList");
     }
 
     @Override
     public T remove( int index )
     {
-        if (isRealized())
+        synchronized(mtx)
         {
-            return realList.remove(index);
+            if (isRealized())
+            {
+                return realList.remove(index);
+            }
+            throw new UnsupportedOperationException("Invalid Function Call 18 for LazyList");
         }
-        throw new UnsupportedOperationException("Invalid Function Call 18 for LazyList");
     }
 
     @Override
     public T set( int index, T element )
     {
-        if (isRealized())
+        synchronized(mtx)
         {
-            return realList.set(index, element);
+            if (isRealized())
+            {
+                return realList.set(index, element);
+            }
+            throw new UnsupportedOperationException("Invalid Function Call 19 for LazyList");
         }
-        throw new UnsupportedOperationException("Invalid Function Call 19 for LazyList");
     }
 
     @Override
     public List<T> subList( int fromIndex, int toIndex )
     {
-        if (isRealized())
+        synchronized(mtx)
         {
-            return realList.subList(fromIndex, toIndex);
+            if (isRealized())
+            {
+                return realList.subList(fromIndex, toIndex);
+            }
+            throw new UnsupportedOperationException("Invalid Function Call 20 for LazyList");
         }
-        throw new UnsupportedOperationException("Invalid Function Call 20 for LazyList");
     }
-
-
-       
 }
