@@ -35,9 +35,13 @@ public class ArrayLazyList<T> extends LazyList
     }
 
     
+    @Override
     public boolean add( Object e )
     {
-        return realList.add(e);
+        synchronized(mtx)
+        {
+            return realList.add(e);
+        }
     }
 
     @Override
