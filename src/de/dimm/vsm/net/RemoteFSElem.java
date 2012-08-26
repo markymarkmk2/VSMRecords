@@ -361,6 +361,11 @@ public class RemoteFSElem implements Serializable
         return gidName;
     }
 
+    public void makeAbsolut( RemoteFSElem slash )
+    {
+        path = slash.getPath() + path;
+    }
+
 
 
 
