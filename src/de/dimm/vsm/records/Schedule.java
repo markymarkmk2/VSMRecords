@@ -12,6 +12,7 @@ import java.util.Date;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -42,10 +43,10 @@ public class Schedule  implements Serializable
 
     private boolean disabled;
 
-    @OneToMany(mappedBy = "sched", orphanRemoval=true, cascade = {CascadeType.REMOVE,CascadeType.DETACH})
+    @OneToMany(mappedBy = "sched", fetch=FetchType.EAGER, orphanRemoval=true, cascade = {CascadeType.REMOVE,CascadeType.DETACH})
     private List<Job> jobs;
 
-    @OneToMany(mappedBy = "sched", orphanRemoval=true, cascade = {CascadeType.REMOVE,CascadeType.DETACH})
+    @OneToMany(mappedBy = "sched",  fetch=FetchType.EAGER, orphanRemoval=true, cascade = {CascadeType.REMOVE,CascadeType.DETACH})
     private List<ClientInfo> clientList;
 
     @ManyToOne
