@@ -42,6 +42,7 @@ public interface GenericEntityManager
     <T> T em_merge( T t ) throws SQLException;
 
     void em_persist( Object o ) throws SQLException;
+    void em_persist( Object o, boolean noCache ) throws SQLException;
 
     void em_refresh( Object o );
 

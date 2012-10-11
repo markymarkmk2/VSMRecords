@@ -189,7 +189,7 @@ public class Role implements java.io.Serializable
         for (int i = 0; i < list.size(); i++)
         {
             RoleOption roleOption = list.get( i);
-            if (roleOption.getToken().equals(opt))
+            if (roleOption.getToken() != null && roleOption.getToken().equals(opt))
                 return true;
         }
         return false;

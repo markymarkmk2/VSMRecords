@@ -60,6 +60,10 @@ public class RemoteFSElem implements Serializable
 
     long dbAttrIdx;
 
+    public RemoteFSElem()
+    {
+        this(-1, null, FileSystemElemNode.FT_FILE, 0,0,0,0,0);
+    }
     public RemoteFSElem( File f)
     {
         this(-1, f.getAbsolutePath(), f.isDirectory() ? FileSystemElemNode.FT_DIR : FileSystemElemNode.FT_FILE, f.lastModified(), f.lastModified(), f.lastModified(), f.length(), 0);

@@ -122,13 +122,17 @@ public class RoleOption implements java.io.Serializable
     {
         if (optionStr == null)
             return false;
-        
-        int ipidx = optionStr.indexOf(':');
-        int portidx = optionStr.indexOf('/');
 
         if (optionStr.isEmpty())
             return false;
-        if (ipidx <= 0 || portidx <= 0 || portidx < ipidx)
+
+        int ipidx = optionStr.indexOf(':');
+        if (ipidx <= 0)
+            return false;
+
+        int portidx = optionStr.indexOf(':', ipidx + 1);
+
+        if (portidx <= 0)
             return false;
 
         try
@@ -167,7 +171,7 @@ public class RoleOption implements java.io.Serializable
         try
         {
             int ipidx = optionStr.indexOf(':');
-            int portidx = optionStr.indexOf('/');
+            int portidx = optionStr.indexOf(':', ipidx + 1);
             String port = optionStr.substring(ipidx + 1, portidx);
             int portNo = Integer.parseInt(port);
             return portNo;
@@ -182,7 +186,8 @@ public class RoleOption implements java.io.Serializable
     {
         try
         {
-            int portidx = optionStr.indexOf('/');
+            int ipidx = optionStr.indexOf(':');
+            int portidx = optionStr.indexOf(':', ipidx + 1);
             String path = optionStr.substring(portidx + 1);
 
             return path;

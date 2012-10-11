@@ -25,6 +25,7 @@ public class AccountConnector  implements java.io.Serializable {
      public static String TY_AD = "ad";
      public static String TY_POP = "pop";
      public static String TY_IMAP = "imap";
+     public static String TY_SMTP = "smtp";
      public static String TY_DBS = "dbs";
 
 
@@ -49,6 +50,8 @@ public class AccountConnector  implements java.io.Serializable {
      private String ldapfilter;
      private String groupIdentifier;
 
+     private String ntDomainName;
+
 
     public AccountConnector()
     {
@@ -67,7 +70,7 @@ public class AccountConnector  implements java.io.Serializable {
     }
 
     public AccountConnector( long id, String type, String ip, Integer port, String user, String pwd, String searchbase, long flags, String sa, String ma,
-                                String domainlist, String excludefilter, String ldap_domain, String ldapfilter, String groupIdentifier )
+                                String domainlist, String excludefilter, String ldap_domain, String ldapfilter, String groupIdentifier, String ntDomainName )
     {
         this.idx = id;
         this.type = type;
@@ -84,6 +87,7 @@ public class AccountConnector  implements java.io.Serializable {
         this.ldapdomain = ldap_domain;
         this.ldapfilter = ldapfilter;
         this.groupIdentifier = groupIdentifier;
+        this.ntDomainName = ntDomainName;
     }
 
     public AccountConnector( AccountConnector a )
@@ -103,6 +107,7 @@ public class AccountConnector  implements java.io.Serializable {
         this.ldapdomain = a.ldapdomain;
         this.ldapfilter = a.ldapfilter;
         this.groupIdentifier = a.groupIdentifier;
+        this.ntDomainName  = a.ntDomainName;
     }
    
     public long getIdx() {
@@ -309,6 +314,18 @@ public class AccountConnector  implements java.io.Serializable {
     {
         this.groupIdentifier = groupIdentifier;
     }
+
+    public String getNtDomainName()
+    {
+        return ntDomainName;
+    }
+
+    public void setNtDomainName( String ntDomainName )
+    {
+        this.ntDomainName = ntDomainName;
+    }
+
+   
 
 
 

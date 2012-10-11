@@ -25,7 +25,7 @@ import java.sql.Statement;
 public class DBChecker
 {
 
-    static long actDBRelease = 17;
+    static long actDBRelease = 18;
     
     public static long getActDBRelease()
     {
@@ -141,6 +141,9 @@ public class DBChecker
 
 
         check_db_changes(stm, "select count(groupIdentifier) from AccountConnector where idx=0", true, "alter table AccountConnector add groupIdentifier varchar(255)", "update AccountConnector set groupIdentifier='' where groupIdentifier is null");
+        check_db_changes(stm, "select count(ntDomainName) from AccountConnector where idx=0", true, "alter table AccountConnector add ntDomainName varchar(255)", "update AccountConnector set ntDomainName='' where ntDomainName is null");
+
+
         check_db_changes(stm, "select count(basePath) from HotFolder where idx=0", true, "alter table HotFolder add basePath varchar(255)", "update HotFolder set basePath='' where basePath is null");
         check_db_changes(stm, "select count(createDateSubdir) from HotFolder where idx=0", true, "alter table HotFolder add createDateSubdir smallInt", "update HotFolder set createDateSubdir=0 where createDateSubdir is null");
 
