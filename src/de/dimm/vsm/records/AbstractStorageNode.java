@@ -173,6 +173,10 @@ public class AbstractStorageNode implements Serializable
     {
         return getNodeMode().equals(NM_ONLINE);
     }
+    public boolean isFullOrOnline()
+    {
+        return getNodeMode().equals(NM_ONLINE) || getNodeMode().equals(NM_FULL);
+    }
     public boolean isVirgin()
     {
         return getNodeMode().equals(NM_VIRGIN);
