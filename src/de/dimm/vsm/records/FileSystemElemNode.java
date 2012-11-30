@@ -403,6 +403,10 @@ public class FileSystemElemNode implements Serializable
     {
         return (LazyList<XANode>)xaNodes;
     }
+    public List<XANode> getXaNodes(GenericEntityManager em)
+    {
+        return getXaNodes().getList(em);
+    }
 
     public void setXaNodes( LazyList<XANode> xaNodes )
     {
