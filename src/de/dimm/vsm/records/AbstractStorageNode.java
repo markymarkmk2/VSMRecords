@@ -38,6 +38,7 @@ public class AbstractStorageNode implements Serializable
     public static final String NM_EMPTYING = "EMPTYING";
     public static final String NM_EMPTIED = "EMPTIED";
     public static final String NM_FULL = "FULL";
+    public static final String NM_TEMP_OFFLINE = "TMP_OFFLINE";
 
 
 
@@ -172,6 +173,10 @@ public class AbstractStorageNode implements Serializable
     public boolean isOnline()
     {
         return getNodeMode().equals(NM_ONLINE);
+    }
+    public boolean isTempOffline()
+    {
+        return getNodeMode().equals(NM_TEMP_OFFLINE);
     }
     public boolean isFullOrOnline()
     {
