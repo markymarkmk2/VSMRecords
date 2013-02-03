@@ -367,7 +367,15 @@ public class RemoteFSElem implements Serializable
 
     public void makeAbsolut( RemoteFSElem slash )
     {
-        path = slash.getPath() + path;
+        if (!path.startsWith("/"))
+        {
+            path = slash.getPath() + path;
+    
+        }
+    }
+
+    void setPath(String uPath) {
+        path = uPath;
     }
 
 
