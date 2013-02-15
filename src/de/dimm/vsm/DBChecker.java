@@ -25,7 +25,7 @@ import java.sql.Statement;
 public class DBChecker
 {
 
-    static long actDBRelease = 18;
+    static long actDBRelease = 21;
     
     public static long getActDBRelease()
     {
