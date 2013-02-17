@@ -8,11 +8,12 @@ package de.dimm.vsm.records;
 
 import de.dimm.vsm.net.RemoteFSElem;
 import java.io.Serializable;
+import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
 
 
 /**
@@ -41,8 +42,10 @@ public class MountEntry implements Serializable
     private String typ;
     
     private boolean disabled; 
-    private boolean showDeleted; 
-    private long ts;
+    private boolean showDeleted;
+
+    @Temporal(javax.persistence.TemporalType.TIMESTAMP)
+    private Date ts;
     
     private boolean mounted;
     
@@ -147,11 +150,11 @@ public class MountEntry implements Serializable
         return name;
     }
 
-    public long getTs() {
+    public Date getTs() {
         return ts;
     }
 
-    public void setTs(long ts) {
+    public void setTs(Date ts) {
         this.ts = ts;
     }
 
@@ -204,7 +207,7 @@ public class MountEntry implements Serializable
         return snapshotIdx;
     }
 
-    public void setSnapshot(long snapshotIdx) {
+    public void setSnapshotIdx(long snapshotIdx) {
         this.snapshotIdx = snapshotIdx;
     }
 

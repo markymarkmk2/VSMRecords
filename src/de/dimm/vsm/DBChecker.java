@@ -25,7 +25,7 @@ import java.sql.Statement;
 public class DBChecker
 {
 
-    static long actDBRelease = 21;
+    static long actDBRelease = 23;
     
     public static long getActDBRelease()
     {
@@ -159,6 +159,7 @@ public class DBChecker
         check_db_changes(stm, "select count(disabled) from MailNotifications where idx=0", true, "alter table MailNotifications add disabled smallInt", "update MailNotifications set disabled=0 where disabled is null");
         check_db_changes(stm, "select count(smtpdata_idx) from MailGroup where idx=0", true, "alter table MailGroup add smtpdata_idx bigInt", null);
 
+       
 
 
         try
