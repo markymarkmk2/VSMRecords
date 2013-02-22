@@ -9,10 +9,13 @@ package de.dimm.vsm.records;
 import de.dimm.vsm.net.RemoteFSElem;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Objects;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 
 
@@ -35,39 +38,36 @@ public class MountEntry implements Serializable
 
     private String name;
 
-    long poolIdx;
-//    @ManyToOne
-//    private StoragePool pool;
+
+    @ManyToOne
+    private StoragePool pool;
+    
+    
+    String subPath;
+
 
     private String typ;
     
     private boolean disabled; 
     private boolean showDeleted;
+    private boolean autoMount;
 
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date ts;
-    
-    private boolean mounted;
-    
-    private long snapshotIdx;
-  
+        
+    @ManyToOne
+    Snapshot snapShot;
 
     String ip;
     int port;
     private RemoteFSElem  mountPath;
     String username;
-
-
-
-    public MountEntry()
-    {
-    }
   
 
     @Override
     public String toString()
     {
-        return username + "@" + ip + ":" + port + "/" + mountPath;
+        return name +" " + (username != null ? username + "@" : "") + " " + typ + " " + ip + "/" + mountPath.getPath();
     }
 
      /**
@@ -86,17 +86,13 @@ public class MountEntry implements Serializable
         this.idx = idx;
     }
 
-    public void setPoolIdx( long poolIdx )
-    {
-        this.poolIdx = poolIdx;
+    public void setPool(StoragePool pool) {
+        this.pool = pool;
     }
 
-    public long getPoolIdx()
-    {
-        return poolIdx;
+    public StoragePool getPool() {
+        return pool;
     }
-
-
 
     public void setDisabled( boolean disabled )
     {
@@ -137,9 +133,7 @@ public class MountEntry implements Serializable
     {
         return mountPath;
     }
-
    
-
     public void setName( String name )
     {
         this.name = name;
@@ -167,13 +161,7 @@ public class MountEntry implements Serializable
         this.username = username;
     }
 
-    public boolean isMounted() {
-        return mounted;
-    }
-
-    public void setMounted(boolean mounted) {
-        this.mounted = mounted;
-    }
+   
 
     /**
      * @return the showDeleted
@@ -203,14 +191,64 @@ public class MountEntry implements Serializable
         this.typ = typ;
     }
 
-    public long getSnapshotIdx() {
-        return snapshotIdx;
+  
+
+    public void setAutoMount(boolean autoMount) {
+        this.autoMount = autoMount;
     }
 
-    public void setSnapshotIdx(long snapshotIdx) {
-        this.snapshotIdx = snapshotIdx;
+    public boolean isAutoMount() {
+        return autoMount;
     }
 
+    public String getSubPath() {
+        return subPath;
+    }
+
+    public Snapshot getSnapShot() {
+        return snapShot;
+    }
+
+    public void setSubPath(String subPath) {
+        this.subPath = subPath;
+    }
+
+    public void setSnapShot(Snapshot snapShot) {
+        this.snapShot = snapShot;
+    }
+
+    public boolean isReadOnly() {
+        return !typ.equals(TYP_RDWR);
+    }
+
+    @Override
+    public boolean equals( Object obj )
+    {
+        if (obj instanceof MountEntry)
+        {
+            MountEntry me = (MountEntry)obj;
+            return (me.getIdx() == getIdx() && me.getPool().getIdx() == getPool().getIdx());
+        }
+        return super.equals( obj );
+    }
+
+    @Override
+    public int hashCode()
+    {
+        int hash = 7;
+        hash = 19 * hash + (int) (this.idx ^ (this.idx >>> 32));
+        hash = 19 * hash + Objects.hashCode( this.pool );
+        return hash;
+    }
+
+    public String getKey()
+    {
+        return getIdx() + "#" + (getPool() != null ? getPool().getIdx() : "");
+    }
+
+    
+
+    
     
 
     

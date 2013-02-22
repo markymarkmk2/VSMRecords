@@ -25,7 +25,7 @@ import java.sql.Statement;
 public class DBChecker
 {
 
-    static long actDBRelease = 23;
+    static long actDBRelease = 26;
     
     public static long getActDBRelease()
     {
@@ -93,6 +93,8 @@ public class DBChecker
 
         check_db_changes(stm, "select count(cloneNode_idx) from AbstractStorageNode where idx=0", true, "alter table AbstractStorageNode add cloneNode_idx bigInt", null);
        
+      //  check_db_changes(stm, "select count(idx) from MountEntry where idx=0", false, "drop table MountEntry", null);
+
 
         try
         {
