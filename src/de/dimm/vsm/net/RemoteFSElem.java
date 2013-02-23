@@ -88,6 +88,13 @@ public class RemoteFSElem implements Serializable
         fileHandle = -1;
         deleted = false;
     }
+
+    public static RemoteFSElem createDir( String path )
+    {
+        long now = System.currentTimeMillis();
+        return new RemoteFSElem( path, FileSystemElemNode.FT_DIR, now, now, now, 0, 0 );
+    }
+
     public void setUnixStylePath( boolean b )
     {
         if (b)
