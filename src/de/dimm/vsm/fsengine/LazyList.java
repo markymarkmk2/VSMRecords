@@ -19,11 +19,12 @@ import org.eclipse.persistence.indirection.ValueHolderInterface;
 public abstract class LazyList<T> implements List<T>, IndirectContainer
 {    
     protected List<T> realList;
-    protected final String mtx = "";
+    protected final Object mtx;
 
     public LazyList()
     {
         realList = null;
+        mtx = new Object();
     }
 
     @Override
@@ -48,6 +49,7 @@ public abstract class LazyList<T> implements List<T>, IndirectContainer
     public LazyList( Class<T> cl, String fieldname, long ownerIdx)
     {
         realList = null;
+        mtx = new Object();
     }
 
   
