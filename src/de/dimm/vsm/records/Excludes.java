@@ -207,8 +207,10 @@ public class Excludes implements Serializable
             arg = arg.toLowerCase();
         }
 
+        arg = arg.replace('\\', '/');
+        file = file.replace('\\', '/');
 
-        if(excludes.getMode().equals(Excludes.MD_BEGINS_WITH))
+        if (excludes.getMode().equals(Excludes.MD_BEGINS_WITH))
         {
             if (file.startsWith(arg))
                 return true;
