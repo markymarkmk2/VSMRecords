@@ -53,27 +53,17 @@ public abstract class LazyList<T> implements List<T>, IndirectContainer
     }
 
   
-    public abstract void realize(GenericEntityManager _handler);
+    protected abstract List<T> realize(GenericEntityManager _handler);
    
 
     public boolean isRealized()
     {
-        synchronized(mtx)
-        {
-            return realList != null;
-        }
+         return realList != null;
     }
 
     public void unRealize()
     {
-        synchronized(mtx)
-        {
-            if (realList != null)
-            {
-                realList.clear();
-                realList = null;
-            }
-        }
+         realList = null;            
     }
 
     @Override
@@ -92,9 +82,10 @@ public abstract class LazyList<T> implements List<T>, IndirectContainer
 //    @Override
     public boolean isEmpty(GenericEntityManager handler)
     {
+        List<T> l = realize(handler);
         synchronized(mtx)
         {
-            realize(handler);
+            realList = l;
             return realList.isEmpty();
         }
     }
@@ -102,10 +93,20 @@ public abstract class LazyList<T> implements List<T>, IndirectContainer
  //   @Override
     public int size(GenericEntityManager handler)
     {
+        List<T> l = realize(handler);
         synchronized(mtx)
         {
-            realize(handler);
+            realList = l;
             return realList.size();
+        }
+    }
+    
+    public void realizeAndSet(GenericEntityManager _handler)
+    {
+        List<T> l = realize(_handler);
+        synchronized(mtx)
+        {
+            realList = l;
         }
     }
 
@@ -117,7 +118,7 @@ public abstract class LazyList<T> implements List<T>, IndirectContainer
         long idx = handler.getIdx(o);
         synchronized(mtx)
         {
-            realize(handler);
+            realizeAndSet(handler);
             for (int i = 0; i < realList.size(); i++)
             {
                 Object object = realList.get(i);
@@ -134,9 +135,10 @@ public abstract class LazyList<T> implements List<T>, IndirectContainer
 //    @Override
     public Iterator iterator(GenericEntityManager handler)
     {
+        List<T> l = realize(handler);
         synchronized(mtx)
         {
-            realize( handler );
+            realList = l;
             return realList.iterator();
         }
     }
@@ -144,9 +146,10 @@ public abstract class LazyList<T> implements List<T>, IndirectContainer
 //    @Override
     public Object[] toArray(GenericEntityManager handler)
     {
+        List<T> l = realize(handler);
         synchronized(mtx)
         {
-            realize( handler );
+            realList = l;
             return realList.toArray();
         }
     }
@@ -154,9 +157,10 @@ public abstract class LazyList<T> implements List<T>, IndirectContainer
  //   @Override
     public Object[] toArray( GenericEntityManager handler, Object[] a )
     {
+        List<T> l = realize(handler);
         synchronized(mtx)
         {
-            realize( handler );
+            realList = l;
             return realList.toArray(a);
         }
     }
@@ -164,9 +168,10 @@ public abstract class LazyList<T> implements List<T>, IndirectContainer
 //    @Override
     public boolean add( GenericEntityManager handler, T e )
     {
+        List<T> l = realize(handler);
         synchronized(mtx)
         {
-            realize( handler );
+            realList = l;
             return realList.add(e);
         }
     }
@@ -175,9 +180,10 @@ public abstract class LazyList<T> implements List<T>, IndirectContainer
     public boolean remove( GenericEntityManager handler, T o )
     {
         long idx = handler.getIdx(o);
+        List<T> l = realize(handler);
         synchronized(mtx)
         {
-            realize( handler );
+            realList = l;
             for (int i = 0; i < realList.size(); i++)
             {
                 T object = realList.get(i);
@@ -195,9 +201,10 @@ public abstract class LazyList<T> implements List<T>, IndirectContainer
 //    @Override
     public boolean containsAll( GenericEntityManager handler, Collection c )
     {
+        List<T> l = realize(handler);
         synchronized(mtx)
         {
-            realize( handler );
+            realList = l;
             return realList.containsAll(c);
         }
     }
@@ -205,9 +212,10 @@ public abstract class LazyList<T> implements List<T>, IndirectContainer
 //    @Override
     public boolean addAll( GenericEntityManager handler, Collection c )
     {
+        List<T> l = realize(handler);
         synchronized(mtx)
         {
-            realize( handler );
+            realList = l;
             return realList.addAll(c);
         }
     }
@@ -215,9 +223,10 @@ public abstract class LazyList<T> implements List<T>, IndirectContainer
 //    @Override
     public boolean addAll( GenericEntityManager handler, int index, Collection c )
     {
+        List<T> l = realize(handler);
         synchronized(mtx)
         {
-            realize( handler );
+            realList = l;
             return realList.addAll(index, c);
         }
     }
@@ -225,9 +234,10 @@ public abstract class LazyList<T> implements List<T>, IndirectContainer
 //    @Override
     public boolean removeAll( GenericEntityManager handler, Collection c )
     {
+        List<T> l = realize(handler);
         synchronized(mtx)
         {
-            realize( handler );
+            realList = l;
             return realList.removeAll(c);
         }
     }
@@ -235,9 +245,10 @@ public abstract class LazyList<T> implements List<T>, IndirectContainer
  //   @Override
     public boolean retainAll( GenericEntityManager handler, Collection c )
     {
+        List<T> l = realize(handler);
         synchronized(mtx)
         {
-            realize( handler );
+            realList = l;
             return realList.retainAll(c);
         }
     }
@@ -245,22 +256,22 @@ public abstract class LazyList<T> implements List<T>, IndirectContainer
 //    @Override
     public void clear(GenericEntityManager handler)
     {
+
         synchronized(mtx)
         {
-            if (!isRealized())
-                return;
-
-            realize( handler );
-            realList.clear();
+           if (!isRealized())
+               return;
+           realList.clear();
         }
     }
 
  //   @Override
     public T get( GenericEntityManager handler, int index )
     {
+        List<T> l = realize(handler);
         synchronized(mtx)
         {
-            realize( handler );
+            realList = l;
             return realList.get(index);
         }
     }
@@ -268,9 +279,10 @@ public abstract class LazyList<T> implements List<T>, IndirectContainer
 //    @Override
     public Object set( GenericEntityManager handler, int index, T element )
     {
+        List<T> l = realize(handler);
         synchronized(mtx)
         {
-            realize( handler );
+            realList = l;
             return realList.set(index, element);
         }
     }
@@ -278,9 +290,10 @@ public abstract class LazyList<T> implements List<T>, IndirectContainer
 //    @Override
     public void add( GenericEntityManager handler, int index, T element )
     {
+        List<T> l = realize(handler);
         synchronized(mtx)
         {
-            realize( handler );
+            realList = l;
             realList.add(index, element);
         }
     }
@@ -288,9 +301,10 @@ public abstract class LazyList<T> implements List<T>, IndirectContainer
 //    @Override
     public Object remove( GenericEntityManager handler, int index )
     {
+        List<T> l = realize(handler);
         synchronized(mtx)
         {
-            realize( handler );
+            realList = l;
             return realList.remove(index);
         }
     }
@@ -299,9 +313,10 @@ public abstract class LazyList<T> implements List<T>, IndirectContainer
     public int indexOf( GenericEntityManager handler, Object o )
     {
         long idx = handler.getIdx(o);
+        List<T> l = realize(handler);
         synchronized(mtx)
         {
-            realize( handler );
+            realList = l;
             for (int i = 0; i < realList.size(); i++)
             {
                 Object object = realList.get(i);
@@ -320,9 +335,10 @@ public abstract class LazyList<T> implements List<T>, IndirectContainer
     public int lastIndexOf( GenericEntityManager handler, Object o )
     {
         long idx = handler.getIdx(o);
+        List<T> l = realize(handler);
         synchronized(mtx)
         {
-            realize( handler );
+            realList = l;
             for (int i = realList.size() - 1; i >= 0; i--)
             {
                 Object object = realList.get(i);
@@ -340,9 +356,10 @@ public abstract class LazyList<T> implements List<T>, IndirectContainer
 //    @Override
     public ListIterator listIterator(GenericEntityManager handler)
     {
+        List<T> l = realize(handler);
         synchronized(mtx)
         {
-            realize( handler );
+            realList = l;
             return realList.listIterator();
         }
     }
@@ -350,9 +367,10 @@ public abstract class LazyList<T> implements List<T>, IndirectContainer
 //    @Override
     public ListIterator listIterator( GenericEntityManager handler, int index )
     {
+        List<T> l = realize(handler);
         synchronized(mtx)
         {
-            realize( handler );
+            realList = l;
             return realList.listIterator(index);
         }
     }
@@ -360,9 +378,10 @@ public abstract class LazyList<T> implements List<T>, IndirectContainer
 //    @Override
     public List subList( GenericEntityManager handler, int fromIndex, int toIndex )
     {
+        List<T> l = realize(handler);
         synchronized(mtx)
         {
-            realize( handler );
+            realList = l;
             return realList.subList(fromIndex, toIndex);
         }
     }
@@ -370,9 +389,10 @@ public abstract class LazyList<T> implements List<T>, IndirectContainer
    
     public List<T> getList( GenericEntityManager handler )
     {
+        List<T> l = realize(handler);
         synchronized(mtx)
         {
-            realize( handler );
+            realList = l;
             return realList;
         }
     }
@@ -429,10 +449,7 @@ public abstract class LazyList<T> implements List<T>, IndirectContainer
     @Override
     public void clear()
     {
-        synchronized(mtx)
-        {
-            unRealize();
-        }
+         unRealize();
     }
 
     @Override
@@ -440,7 +457,7 @@ public abstract class LazyList<T> implements List<T>, IndirectContainer
     {
         synchronized(mtx)
         {
-                if (isRealized())
+            if (isRealized())
             {
                 return realList.contains((T)o);
             }

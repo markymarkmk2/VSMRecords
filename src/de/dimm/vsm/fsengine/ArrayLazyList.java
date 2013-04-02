@@ -26,12 +26,13 @@ public class ArrayLazyList<T> extends LazyList
     }
 
     @Override
-    public void realize( GenericEntityManager _handler )
+    public List<T> realize( GenericEntityManager _handler )
     {
         if (realList == null)
         {
             throw new RuntimeException( "RealList is not initialized" );
         }
+        return realList;
     }
 
     
