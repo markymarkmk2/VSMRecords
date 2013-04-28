@@ -292,8 +292,8 @@ public class RemoteFSElem implements Serializable
     @Override
     public String toString()
     {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyy HH.mm.ss");
-        return path + "(" + sdf.format( new Date(mtimeMs)) + ")" ;
+        
+        return path;
     }
 
     public char getSeparatorChar()
