@@ -6,6 +6,8 @@
 package de.dimm.vsm.records;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -92,7 +94,8 @@ public class FileSystemElemAttributes implements Serializable
     @Override
     public String toString()
     {
-        return "Attr " + name + " TS " + ts;
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyy HH.mm.ss");
+        return "Attr " + name + " TS " + ts + " (" + sdf.format( new Date(ts)) + ")";
     }
 
     public void rename_To( String string )

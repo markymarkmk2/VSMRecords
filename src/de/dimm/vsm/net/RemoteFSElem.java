@@ -9,6 +9,7 @@ import de.dimm.vsm.records.FileSystemElemAttributes;
 import de.dimm.vsm.records.FileSystemElemNode;
 import java.io.File;
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -291,7 +292,8 @@ public class RemoteFSElem implements Serializable
     @Override
     public String toString()
     {
-        return path;
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyy HH.mm.ss");
+        return path + "(" + sdf.format( new Date(mtimeMs)) + ")" ;
     }
 
     public char getSeparatorChar()
