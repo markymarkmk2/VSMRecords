@@ -349,9 +349,6 @@ public class FileSystemElemNode implements Serializable
 //
     public FileSystemElemAttributes getAttributes()
     {
-        if (attributes == null)
-            throw new RuntimeException("Uninitalized attribute");
-
         return attributes;
     }
 
