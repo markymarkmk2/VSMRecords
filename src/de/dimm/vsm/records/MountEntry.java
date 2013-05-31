@@ -67,7 +67,7 @@ public class MountEntry implements Serializable
     @Override
     public String toString()
     {
-        return name +" " + (username != null ? username + "@" : "") + " " + typ + " " + ip + "/" + mountPath.getPath();
+        return name +" " + (username != null ? username + "@" : "") + " " + typ + " " + ip + "/" + (mountPath != null ? mountPath.getPath() : "");
     }
 
      /**
