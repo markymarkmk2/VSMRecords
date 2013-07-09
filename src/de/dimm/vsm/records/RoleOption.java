@@ -19,6 +19,7 @@ public class RoleOption implements java.io.Serializable
     public static final String RL_ALLOW_VIEW_PARAM = "viewp";
     public static final String RL_ALLOW_EDIT_PARAM = "editp";
     public static final String RL_ADMIN = "admin";
+    public static final String RL_READ_WRITE = "readwrite";
     public static final String RL_USERPATH = "upath_opt";  // ROLEOPTION HAS OPTION FIELD
     public static final String RL_FSMAPPINGFILE = "fsmap_opt";  // ROLEOPTION HAS OPTION FIELD
 

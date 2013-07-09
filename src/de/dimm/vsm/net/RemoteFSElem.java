@@ -60,6 +60,8 @@ public class RemoteFSElem implements Serializable
     boolean deleted;
 
     long dbAttrIdx;
+    
+    boolean virtualFS;
 
     public RemoteFSElem()
     {
@@ -194,6 +196,16 @@ public class RemoteFSElem implements Serializable
     public long getFileHandle()
     {
         return fileHandle;
+    }
+
+    public void setDataSize( long dataSize )
+    {
+        this.dataSize = dataSize;
+    }
+
+    public void setXaDataSize( long xaDataSize )
+    {
+        this.xaDataSize = xaDataSize;
     }
 
 
@@ -387,6 +399,17 @@ public class RemoteFSElem implements Serializable
         path = uPath;
     }
 
+    public boolean isVirtualFS()
+    {
+        return virtualFS;
+    }
+
+    public void setVirtualFS( boolean virtualFS )
+    {
+        this.virtualFS = virtualFS;
+    }
+
+    
 
 
 
