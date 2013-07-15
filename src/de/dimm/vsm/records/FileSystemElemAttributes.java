@@ -95,7 +95,8 @@ public class FileSystemElemAttributes implements Serializable
     public String toString()
     {
         SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyy HH.mm.ss");
-        return "Attr " + name + " TS " + ts + " (" + sdf.format( new Date(ts)) + ")";
+//        return "Attr " + name + " TS " + ts + " len " + fsize + " (" + sdf.format( new Date(ts)) + ")";
+        return name + " len " + fsize + " " + super.toString();
     }
 
     public void rename_To( String string )
