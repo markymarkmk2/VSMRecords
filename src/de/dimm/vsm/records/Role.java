@@ -151,9 +151,11 @@ public class Role implements java.io.Serializable
         this.accountConnector = ac;
     }
 
-    public LazyList<RoleOption> getRoleOptions()
+    public List<RoleOption> getRoleOptions()
     {
-        return (LazyList<RoleOption>)roleOptions;
+        if (roleOptions instanceof LazyList)
+            return ((LazyList<RoleOption>)roleOptions).getList();
+        return roleOptions;
     }
 
     public void setRoleOptions( LazyList<RoleOption> roleOptions )
@@ -184,7 +186,7 @@ public class Role implements java.io.Serializable
     public boolean hasRoleOption(  String opt )
     {
         // IS ALLOWED, EAGER FETCH
-        List<RoleOption> list = getRoleOptions().getList();
+        List<RoleOption> list = getRoleOptions();
 
         for (int i = 0; i < list.size(); i++)
         {
