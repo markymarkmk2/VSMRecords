@@ -15,7 +15,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToOne;
 import javax.persistence.Temporal;
 
 
@@ -246,11 +245,27 @@ public class MountEntry implements Serializable
         return getIdx() + "#" + (getPool() != null ? getPool().getIdx() : "");
     }
 
+    public MountEntry() 
+    {        
+    }    
     
-
-    
-    
-
-    
+    public MountEntry( MountEntry mountEntry) 
+    {        
+        name = mountEntry.getName();
+        autoMount = mountEntry.isAutoMount();
+        disabled = mountEntry.isDisabled();
+        showDeleted = mountEntry.isShowDeleted();
+        ts = mountEntry.getTs();
+        typ = mountEntry.getTyp();
+        username = mountEntry.getUsername();
+        idx = 0;
+        ip = mountEntry.getIp();
+        subPath = mountEntry.getSubPath();
+        port = mountEntry.getPort();
+        mountPath = mountEntry.getMountPath();
+        pool = mountEntry.getPool();  
+        snapShot = mountEntry.getSnapShot();
+    }
+            
 }
 

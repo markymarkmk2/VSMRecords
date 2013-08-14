@@ -40,7 +40,7 @@ public class Role implements java.io.Serializable
     private AccountConnector accountConnector;
     
     @OneToMany(mappedBy = "role",  fetch=FetchType.EAGER, orphanRemoval=true, cascade = {CascadeType.REMOVE,CascadeType.DETACH})
-    List<RoleOption> roleOptions;
+    private List<RoleOption> roleOptions;
 
     public Role()
     {
@@ -151,11 +151,11 @@ public class Role implements java.io.Serializable
         this.accountConnector = ac;
     }
 
-    public List<RoleOption> getRoleOptions()
+    public LazyList<RoleOption> getRoleOptions()
     {
-        if (roleOptions instanceof LazyList)
-            return ((LazyList<RoleOption>)roleOptions).getList();
-        return roleOptions;
+        //if (roleOptions instanceof LazyList)
+            return ((LazyList<RoleOption>)roleOptions);//.getList();
+        //return roleOptions;
     }
 
     public void setRoleOptions( LazyList<RoleOption> roleOptions )
