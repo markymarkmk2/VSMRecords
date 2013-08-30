@@ -58,5 +58,7 @@ public interface GenericEntityManager
     public boolean nativeCall( String string );
 
     public int nativeUpdate( String string );
+    
+    public void setSuppressNotFound( boolean b);
 
 }
