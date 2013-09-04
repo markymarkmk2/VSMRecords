@@ -60,6 +60,7 @@ public class RemoteFSElem implements Serializable
     boolean deleted;
 
     long dbAttrIdx;
+    long stDev;
     
     boolean virtualFS;
 
@@ -409,8 +410,14 @@ public class RemoteFSElem implements Serializable
         this.virtualFS = virtualFS;
     }
 
+    public void setStDev( long stDev )
+    {
+        this.stDev = stDev;
+    }
+
+    public long getStDev()
+    {
+        return stDev;
+    }
     
-
-
-
 }
