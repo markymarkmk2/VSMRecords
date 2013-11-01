@@ -419,5 +419,18 @@ public class RemoteFSElem implements Serializable
     {
         return stDev;
     }
+
+    public void setAtimeMs( long l )
+    {
+        atimeMs = l;
+    }
+    public void setCtimeMs( long l )
+    {
+        ctimeMs = l;
+    }
+    public void setMtimeMs( long l )
+    {
+        mtimeMs = l;
+    }
     
 }

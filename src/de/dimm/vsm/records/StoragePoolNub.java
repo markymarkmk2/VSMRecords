@@ -95,6 +95,11 @@ public class StoragePoolNub  implements Serializable
     {
         return disabled;
     }
+    
+    public String getDbName() 
+    {
+        return "db_" + getIdx();
+    }
 
     
 }
