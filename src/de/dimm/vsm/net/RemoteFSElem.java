@@ -9,7 +9,6 @@ import de.dimm.vsm.records.FileSystemElemAttributes;
 import de.dimm.vsm.records.FileSystemElemNode;
 import java.io.File;
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -63,6 +62,7 @@ public class RemoteFSElem implements Serializable
     long stDev;
     
     boolean virtualFS;
+    boolean multVersions;
 
     public RemoteFSElem()
     {
@@ -170,7 +170,7 @@ public class RemoteFSElem implements Serializable
 
         deleted = attr.isDeleted();
         dbAttrIdx = attr.getIdx();
-                
+                    
     }
 
     public long getIdx()
@@ -432,5 +432,16 @@ public class RemoteFSElem implements Serializable
     {
         mtimeMs = l;
     }
+
+    public boolean isMultVersions()
+    {
+        return multVersions;
+    }
+
+    public final void setMultVersions( boolean multVersions )
+    {
+        this.multVersions = multVersions;
+    }
+    
     
 }

@@ -30,6 +30,7 @@ public class MountEntry implements Serializable
     public static final String TYP_TIMESTAMP = "TS";
     public static final String TYP_RDONLY = "RD";
     public static final String TYP_RDWR = "WR";
+    public static final String TYP_RDONLYMULTI = "RDMULTI";
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -217,7 +218,11 @@ public class MountEntry implements Serializable
     }
 
     public boolean isReadOnly() {
+        // Alles ausser RDWR ist RDONLY!
         return !typ.equals(TYP_RDWR);
+    }
+    public boolean isReadOnlyMulti() {
+        return typ.equals(TYP_RDONLYMULTI);
     }
 
     @Override

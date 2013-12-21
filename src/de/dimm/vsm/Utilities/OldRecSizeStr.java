@@ -1,7 +1,7 @@
 package de.dimm.vsm.Utilities;
 
 
-public class SizeStr extends Object
+public class OldRecSizeStr extends Object
 {
     public static final double TB_SIZE = 1e12;
     public static final double GB_SIZE = 1e9;
@@ -11,7 +11,7 @@ public class SizeStr extends Object
     double size;
     boolean _is_nok;
     
-    public SizeStr( double s )
+    public OldRecSizeStr( double s )
     {
         size = s;
         _is_nok = false;

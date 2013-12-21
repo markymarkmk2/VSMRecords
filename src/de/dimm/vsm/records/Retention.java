@@ -5,7 +5,7 @@
  */
 package de.dimm.vsm.records;
 
-import de.dimm.vsm.Utilities.SizeStr;
+import de.dimm.vsm.Utilities.OldRecSizeStr;
 import de.dimm.vsm.fsengine.GenericEntityManager;
 import de.dimm.vsm.fsengine.LazyList;
 import java.io.Serializable;
@@ -645,7 +645,7 @@ public class Retention implements Serializable
             if (isSizeField(argType))
             {
                 long s = Long.parseLong(argValue);
-                return SizeStr.format(s);
+                return OldRecSizeStr.format(s);
             }
         }
         catch (Exception exception)
