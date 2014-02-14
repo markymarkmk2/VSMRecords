@@ -78,6 +78,17 @@ public class TextBase implements Serializable
         this.messageText = messageText;
     }
 
+    public void setMessageId( String messageId )
+    {
+        this.messageId = messageId;
+    }
+
+    public void setLangId( String langId )
+    {
+        this.langId = langId;
+    }
+
+    
     
 
 }

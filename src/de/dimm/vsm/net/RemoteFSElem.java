@@ -92,6 +92,26 @@ public class RemoteFSElem implements Serializable
         fileHandle = -1;
         deleted = false;
     }
+    public RemoteFSElem( RemoteFSElem r)
+    {
+        this.dbIdx = r.dbIdx;
+        this.path = r.path;
+        this.typ = r.typ;
+        this.mtimeMs = r.mtimeMs;
+        this.ctimeMs = r.ctimeMs;
+        this.atimeMs = r.atimeMs;
+        this.dataSize = r.dataSize;
+        this.xaDataSize = r.xaDataSize;
+        separatorChar = File.separatorChar;
+        pathSeparatorChar = File.pathSeparatorChar;
+        fileHandle = r.fileHandle;
+        deleted = r.deleted;
+        dbAttrIdx = r.dbAttrIdx;
+        stDev = r.stDev;    
+        virtualFS = r.virtualFS;
+        multVersions = r.multVersions;        
+    }
+
 
     public static RemoteFSElem createDir( String path )
     {
@@ -396,7 +416,7 @@ public class RemoteFSElem implements Serializable
         }
     }
 
-    void setPath(String uPath) {
+    public void setPath(String uPath) {
         path = uPath;
     }
 
