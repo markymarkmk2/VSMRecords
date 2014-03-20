@@ -23,6 +23,7 @@ public class RoleOption implements java.io.Serializable
     public static final String RL_USERPATH = "upath_opt";  // ROLEOPTION HAS OPTION FIELD
     public static final String RL_FSMAPPINGFILE = "fsmap_opt";  // ROLEOPTION HAS OPTION FIELD
     public static final String RL_GROUP = "group_opt";
+    public static final String RL_VALID_POOLS = "validpools_opt";
 
 
 
