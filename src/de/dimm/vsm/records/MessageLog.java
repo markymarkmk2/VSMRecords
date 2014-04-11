@@ -34,6 +34,7 @@ public class MessageLog implements Serializable
     public static final int ML_WARN = 2;
     public static final int ML_ERROR = 3;
     public static final int ML_DEBUG = 4;
+    public static final int ML_TRACE = 5;
 
     public static final int UID_SYSTEM = 0;
 
