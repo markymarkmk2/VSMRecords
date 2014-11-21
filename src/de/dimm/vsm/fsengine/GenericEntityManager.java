@@ -5,6 +5,7 @@
 
 package de.dimm.vsm.fsengine;
 
+import de.dimm.vsm.records.HashBlock;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -60,5 +61,7 @@ public interface GenericEntityManager
     public int nativeUpdate( String string );
     
     public void setSuppressNotFound( boolean b);
+
+    public List<HashBlock> getDistinctHashBlockStatement( long idx, long offset ) throws SQLException;;
 
 }
