@@ -55,7 +55,7 @@ public class BackupJobResult  implements Serializable
     public String toString()
     {
         return "BackupJob " + startTime.toString() + " " + (ok?"ok":"nok") + " " + status != null ? status : "";
-    }
+        }
 
 
     @ManyToOne

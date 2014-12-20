@@ -10,15 +10,20 @@ import de.dimm.vsm.fsengine.GenericEntityManager;
 import de.dimm.vsm.fsengine.LazyList;
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
+import javax.persistence.Transient;
 
 /**
  *
@@ -83,6 +88,15 @@ public class Retention implements Serializable
     private String followAction;
     private String followActionParams;
     private String mode;
+    
+    private boolean clearFreeBlocks;
+
+    
+    @OneToMany(mappedBy = "retention",  fetch=FetchType.EAGER, orphanRemoval=true, cascade = {CascadeType.REMOVE,CascadeType.DETACH})    
+    private LazyList<RetentionWindow> retentionWindows;
+
+    @OneToMany(mappedBy = "retention",  fetch=FetchType.EAGER, orphanRemoval=true, cascade = {CascadeType.REMOVE,CascadeType.DETACH})    
+    private LazyList<RetentionJob> retentionJobs;
 
     @Override
     public String toString()
@@ -652,6 +666,71 @@ public class Retention implements Serializable
         {
         }
         return argType;
-
     }
+
+    public boolean isClearFreeBlocks() {
+        return clearFreeBlocks;
+    }
+
+    public void setClearFreeBlocks( boolean clearFreeBlocks ) {
+        this.clearFreeBlocks = clearFreeBlocks;
+    }
+
+    public boolean isInStartWindow( long now ) {
+        if (retentionWindows == null || retentionWindows.isEmpty())
+            return true;
+        
+        GregorianCalendar cal = new GregorianCalendar();
+        cal.setTimeInMillis(now);
+        long msDay = cal.get(Calendar.HOUR) * 3600 * 1000;
+        msDay += cal.get(Calendar.MINUTE) * 60 * 1000;
+        msDay += cal.get(Calendar.SECOND) * 1000;
+        
+        boolean ret = true;
+        for (RetentionWindow rwin: retentionWindows) {
+            if (rwin.getDisabled())
+                continue;
+            switch(rwin.getCycleString()) {
+                case RetentionWindow.YEARLY: {
+                    int weekNr = cal.get(Calendar.WEEK_OF_YEAR);
+                    
+                    if (weekNr < rwin.getStartWeekNumber() || 
+                            weekNr >= rwin.getEndWeekNumber() )
+                        ret = false;                    
+                } // fallthrough for Week test
+                case RetentionWindow.WEEKLY: {
+                    
+                    int dayNr = cal.get(Calendar.DAY_OF_WEEK);
+                    if (dayNr < rwin.getStartDayNumber() || 
+                            dayNr >= rwin.getEndDayNumber() )
+                        ret = false;                    
+                }// fallthrough for Day test                
+                case RetentionWindow.DAILY: {
+                    if (msDay < rwin.getStartOffsetStartMs()  || 
+                            msDay >= rwin.getEndOffsetStartMs()) {
+                        ret = false;
+                    }
+                    break;
+                }
+            }
+        }
+        return ret;
+    }
+
+    public LazyList<RetentionWindow> getRetentionWindows() {
+        return retentionWindows;
+    }
+
+    public void setRetentionWindows( LazyList<RetentionWindow> retentionWindows ) {
+        this.retentionWindows = retentionWindows;
+    }
+
+    public LazyList<RetentionJob> getRetentionJobs() {
+        return retentionJobs;
+    }
+
+    public void setRetentionJobs(LazyList<RetentionJob> retentionJobs ) {
+        this.retentionJobs = retentionJobs;
+    }
+    
 }

@@ -25,7 +25,7 @@ import java.sql.Statement;
 public class DBChecker
 {
 
-    static long actDBRelease = 27;
+    static long actDBRelease = 30;
     
     public static long getActDBRelease()
     {
@@ -92,6 +92,9 @@ public class DBChecker
         check_db_changes(stm, "select count(ignorecase) from EXCLUDES where idx=0", true, "alter table EXCLUDES add ignorecase smallInt", "update EXCLUDES set ignorecase=0 where ignorecase is null");
 
         check_db_changes(stm, "select count(cloneNode_idx) from AbstractStorageNode where idx=0", true, "alter table AbstractStorageNode add cloneNode_idx bigInt", null);
+        
+        check_db_changes(stm, "select count(clearFreeBlocks) from RETENTION where idx=0", true, "alter table RETENTION add clearFreeBlocks smallInt", "update RETENTION set clearFreeBlocks=0 where clearFreeBlocks is null");
+        
        
       //  check_db_changes(stm, "select count(idx) from MountEntry where idx=0", false, "drop table MountEntry", null);
 
