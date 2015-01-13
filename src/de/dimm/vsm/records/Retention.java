@@ -23,7 +23,6 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Temporal;
-import javax.persistence.Transient;
 
 /**
  *
@@ -682,7 +681,7 @@ public class Retention implements Serializable
         
         GregorianCalendar cal = new GregorianCalendar();
         cal.setTimeInMillis(now);
-        long msDay = cal.get(Calendar.HOUR) * 3600 * 1000;
+        long msDay = cal.get(Calendar.HOUR_OF_DAY) * 3600 * 1000;
         msDay += cal.get(Calendar.MINUTE) * 60 * 1000;
         msDay += cal.get(Calendar.SECOND) * 1000;
         
@@ -693,23 +692,34 @@ public class Retention implements Serializable
             switch(rwin.getCycleString()) {
                 case RetentionWindow.YEARLY: {
                     int weekNr = cal.get(Calendar.WEEK_OF_YEAR);
+                    boolean outside = rwin.getEndWeekNumber() < rwin.getStartWeekNumber();
                     
                     if (weekNr < rwin.getStartWeekNumber() || 
-                            weekNr >= rwin.getEndWeekNumber() )
-                        ret = false;                    
+                            weekNr >= rwin.getEndWeekNumber() ){
+                        ret = false;  
+                    }
+                    if (outside)
+                        ret = !ret;
+                                          
                 } // fallthrough for Week test
                 case RetentionWindow.WEEKLY: {
+                    boolean outside = rwin.getEndDayNumber() < rwin.getStartDayNumber();
                     
                     int dayNr = cal.get(Calendar.DAY_OF_WEEK);
                     if (dayNr < rwin.getStartDayNumber() || 
                             dayNr >= rwin.getEndDayNumber() )
                         ret = false;                    
+                    if (outside)
+                        ret = !ret;
                 }// fallthrough for Day test                
                 case RetentionWindow.DAILY: {
+                    boolean outside = rwin.getEndOffsetStartMs() < rwin.getStartOffsetStartMs();
                     if (msDay < rwin.getStartOffsetStartMs()  || 
                             msDay >= rwin.getEndOffsetStartMs()) {
                         ret = false;
                     }
+                    if (outside)
+                        ret = !ret;
                     break;
                 }
             }

@@ -45,6 +45,8 @@ public class RetentionWindow  implements Serializable
     private long endOffsetStartMs;  // RELATIVE UHRZEIT AM TAG
     private int  endDayNumber;       // WENN ZYKLUSDAUER > 1d, DANN NUMMER DES TAGES IM ZYKLUS, DER WOCHENTAG ERGIBTS SICH AUS DEM GÜLTIG AB
     private int  endWeekNumber;       // WENN ZYKLUSDAUER > 1d, DANN NUMMER DES WOCHE IM ZYKLUS
+
+    private boolean negated;
     
     @Temporal(javax.persistence.TemporalType.TIMESTAMP)
     private Date retentionStart;
@@ -70,8 +72,8 @@ public class RetentionWindow  implements Serializable
         int eh = (int)(endOffsetS / 3600);
         int em = (int)((endOffsetS/60) % 60);
         
-        String startTimeStr = String.format("%02s:%02s", sh, sm);
-        String endTimeStr = String.format("%02s:%02s", eh, em);        
+        String startTimeStr = String.format("%02d:%02d", sh, sm);
+        String endTimeStr = String.format("%02d:%02d", eh, em);        
 
         if (getDisabled())
         {
@@ -226,6 +228,16 @@ public class RetentionWindow  implements Serializable
     public void setRetention( Retention retention ) {
         this.retention = retention;
     }
+
+    public boolean isNegated() {
+        return negated;
+    }
+
+    public void setNegated( boolean negated ) {
+        this.negated = negated;
+    }
+    
+    
     
     
 }
