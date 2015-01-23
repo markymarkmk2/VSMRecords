@@ -6,6 +6,7 @@
 package de.dimm.vsm.records;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -50,7 +51,6 @@ public class RetentionJob  implements Serializable
     public RetentionJob() {
         start = new Date();
     }
-
     
     
     /**
@@ -64,7 +64,8 @@ public class RetentionJob  implements Serializable
     @Override
     public String toString()
     {        
-        return "";
+        SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+        return "Start: " + sdf.format(start) + (finished ? " ":" un") + "finished";
     }
    
     /**
@@ -109,9 +110,52 @@ public class RetentionJob  implements Serializable
     public void setStartIdx( long startIdx ) {
         this.startIdx = startIdx;
     }
-    
-    
-    
-    
-        
+
+    public long getDedupSize() {
+        return dedupSize;
+    }
+
+    public long getStatAttribs() {
+        return statAttribs;
+    }
+
+    public long getStatDedups() {
+        return statDedups;
+    }
+
+    public long getStatHashes() {
+        return statHashes;
+    }
+
+    public long getStatIdx() {
+        return statIdx;
+    }
+
+    public long getStatNodes() {
+        return statNodes;
+    }
+
+    public void setDedupSize( long dedupSize ) {
+        this.dedupSize = dedupSize;
+    }
+
+    public void setStatAttribs( long statAttribs ) {
+        this.statAttribs = statAttribs;
+    }
+
+    public void setStatDedups( long statDedups ) {
+        this.statDedups = statDedups;
+    }
+
+    public void setStatHashes( long statHashes ) {
+        this.statHashes = statHashes;
+    }
+
+    public void setStatIdx( long statIdx ) {
+        this.statIdx = statIdx;
+    }
+
+    public void setStatNodes( long statNodes ) {
+        this.statNodes = statNodes;
+    }
 }

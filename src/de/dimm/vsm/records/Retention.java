@@ -6,6 +6,7 @@
 package de.dimm.vsm.records;
 
 import de.dimm.vsm.Utilities.OldRecSizeStr;
+import de.dimm.vsm.fsengine.ArrayLazyList;
 import de.dimm.vsm.fsengine.GenericEntityManager;
 import de.dimm.vsm.fsengine.LazyList;
 import java.io.Serializable;
@@ -102,6 +103,12 @@ public class Retention implements Serializable
     {
         return mode + " " + argType + " " + getSqlOpString(argOp) + " " + getNiceValue() + " " + followAction;
     }
+
+    public Retention() {
+        retentionWindows = new ArrayLazyList<RetentionWindow>();
+        retentionJobs = new ArrayLazyList<RetentionJob>();
+    }
+    
 
     /**
      * @return the idx
@@ -692,34 +699,73 @@ public class Retention implements Serializable
             switch(rwin.getCycleString()) {
                 case RetentionWindow.YEARLY: {
                     int weekNr = cal.get(Calendar.WEEK_OF_YEAR);
-                    boolean outside = rwin.getEndWeekNumber() < rwin.getStartWeekNumber();
+                    int dayNr = cal.get(Calendar.DAY_OF_WEEK) - 1;
+                    boolean overflow = rwin.getEndWeekNumber() < rwin.getStartWeekNumber();
                     
-                    if (weekNr < rwin.getStartWeekNumber() || 
-                            weekNr >= rwin.getEndWeekNumber() ){
-                        ret = false;  
+                    // Intervall prüfen
+                    if (overflow) {
+                        if (weekNr <= rwin.getStartWeekNumber() && 
+                                weekNr >= rwin.getEndWeekNumber() ) {
+                            ret = false;                    
+                        }
                     }
-                    if (outside)
-                        ret = !ret;
-                                          
-                } // fallthrough for Week test
-                case RetentionWindow.WEEKLY: {
-                    boolean outside = rwin.getEndDayNumber() < rwin.getStartDayNumber();
-                    
-                    int dayNr = cal.get(Calendar.DAY_OF_WEEK);
-                    if (dayNr < rwin.getStartDayNumber() || 
-                            dayNr >= rwin.getEndDayNumber() )
-                        ret = false;                    
-                    if (outside)
-                        ret = !ret;
-                }// fallthrough for Day test                
-                case RetentionWindow.DAILY: {
-                    boolean outside = rwin.getEndOffsetStartMs() < rwin.getStartOffsetStartMs();
-                    if (msDay < rwin.getStartOffsetStartMs()  || 
-                            msDay >= rwin.getEndOffsetStartMs()) {
+                    else {
+                        if (weekNr < rwin.getStartWeekNumber() || 
+                            weekNr > rwin.getEndWeekNumber() ){
+                            ret = false;  
+                        }
+                    }
+                    // Intervallgrenzen prüfen
+                    if (weekNr == rwin.getStartWeekNumber() && 
+                            dayNr == rwin.getStartDayNumber() && 
+                            msDay < rwin.getStartOffsetStartMs()) {
                         ret = false;
                     }
-                    if (outside)
-                        ret = !ret;
+                    if (weekNr == rwin.getEndWeekNumber() && 
+                            dayNr == rwin.getEndDayNumber() && 
+                            msDay > rwin.getEndOffsetStartMs()) {
+                        ret = false;
+                    }
+                    break;
+                } 
+                case RetentionWindow.WEEKLY: {
+                    boolean overflow = rwin.getEndDayNumber() < rwin.getStartDayNumber();                    
+                    int dayNr = cal.get(Calendar.DAY_OF_WEEK) - 1;
+                    
+                    // Intervall prüfen
+                    if (overflow) {
+                        if (dayNr <= rwin.getStartDayNumber() && 
+                                dayNr >= rwin.getEndDayNumber() )
+                            ret = false;                    
+                    }
+                    else {
+                        if (dayNr < rwin.getStartDayNumber() || 
+                            dayNr > rwin.getEndDayNumber() )
+                        ret = false;                    
+                    }
+                    
+                    // Intervallgrenzen prüfen
+                    if (dayNr == rwin.getStartDayNumber() && msDay < rwin.getStartOffsetStartMs())
+                        ret = false;
+                    if (dayNr == rwin.getEndDayNumber() && msDay > rwin.getEndOffsetStartMs())
+                        ret = false;
+                    break;
+                }
+                    
+                case RetentionWindow.DAILY: {
+                    boolean overflow = rwin.getEndOffsetStartMs() < rwin.getStartOffsetStartMs();
+                    if (overflow) {
+                        if (msDay < rwin.getStartOffsetStartMs() && 
+                                msDay >= rwin.getEndOffsetStartMs()) {
+                            ret = false;
+                        }
+                    }
+                    else {
+                        if (msDay < rwin.getStartOffsetStartMs() ||
+                                msDay > rwin.getEndOffsetStartMs()) {
+                            ret = false;
+                        }
+                    }
                     break;
                 }
             }
@@ -743,4 +789,18 @@ public class Retention implements Serializable
         this.retentionJobs = retentionJobs;
     }
     
+    /**
+     * Wenn es einen Job gibt, der ins aktuelle Startfenster fällt, dann true
+     * @return 
+     */
+    public boolean existJobInStartWindow() {
+        if (retentionWindows.isEmpty())
+            return false;
+        for (RetentionJob job : retentionJobs) {
+            if (isInStartWindow(job.getStart().getTime())) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
